@@ -10,7 +10,7 @@ A professionally designed portfolio website showcasing cybersecurity expertise w
 
 This portfolio demonstrates not just cybersecurity knowledge, but also **secure coding practices** and **defense-in-depth principles** in web development. Every feature is built with security in mind.
 
-**Live Demo:** https://harish-d2023.github.io/my-portfolio-website/
+**Live Demo:** https://harish-d2023.github.io/portfolio/
 
 ---
 
