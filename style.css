@@ -730,7 +730,7 @@ body {
     padding-bottom: 4rem;
 }
 
-/* Terminal Animation - Hide content until revealed */
+/* Terminal Animation - Content hidden until typewriter completes */
 .section-content {
     opacity: 0;
     visibility: hidden;
@@ -1473,19 +1473,9 @@ body {
     }
 }
 
-/* Section Content Hidden State */
-.section-content {
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease, transform 0.6s ease, visibility 0.6s;
-}
-
-.section-content.revealed {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
+/* Section Content Hidden State - REMOVED */
+/* Previous implementation hid section content until terminal animation completed */
+/* This caused blank screens on mobile - content is now always visible */
 
 /* ===========================
    Contact Section

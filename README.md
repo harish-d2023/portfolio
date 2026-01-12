@@ -60,7 +60,7 @@ cybersecurity-portfolio/
 │   ├── kali-linux-1.svg  # Kali logo
 │   └── resume.pdf        # CV/Resume
 ├── SECURITY.md           # Security documentation
-└── POST_DEPLOYMENT_TASKS.md  # Post-deployment checklist
+
 ```
 
 ---
@@ -125,7 +125,7 @@ This portfolio is built with **security-first principles** and demonstrates:
 Cybersecurity Analyst | Security Researcher
 
 
-- 💼 LinkedIn: [linkedin.com/in/harish-d-703b4026a](https://www.linkedin.com/in/harish-d-703b4026a)
+- 💼 LinkedIn: [linkedin.com/in/harish-d2023](https://www.linkedin.com/in/harish-d2023)
 - 🐙 GitHub: [github.com/harish-d2023](https://github.com/harish-d2023)
 
 ---
@@ -149,10 +149,7 @@ This project is open source. Feel free to use it for your own portfolio with att
 
 Found a security vulnerability? Please report it responsibly:
 
-
-**Subject:** [SECURITY] Portfolio Vulnerability Report
-
-See [SECURITY.md](SECURITY.md) for full disclosure policy.
+check [SECURITY.md](SECURITY.md) for full disclosure policy.
 
 ---
 

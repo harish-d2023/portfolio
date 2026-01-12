@@ -210,8 +210,6 @@ All external links use `rel="noopener noreferrer"` attributes.
 
 ---
 
-## 🔄 Post-Deployment Security
-
 ### 10. Google reCAPTCHA v2 (Invisible)
 
 **Status:** ✅ Active  

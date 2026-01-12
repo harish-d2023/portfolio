@@ -414,10 +414,20 @@ function navigateToSection(sectionId) {
 
     // Manually trigger terminal animation for non-home sections
     if (sectionId !== '#home') {
+        // Set navbar navigation flag to bypass scroll direction check
+        if (window.terminalAnimator) {
+            window.terminalAnimator.isNavbarNavigation = true;
+        }
+
         // Wait for scroll to complete, then trigger animation
         setTimeout(() => {
             if (window.terminalAnimator) {
                 window.terminalAnimator.handleSectionIntersection(targetSection);
+
+                // Reset navbar navigation flag after animation starts
+                setTimeout(() => {
+                    window.terminalAnimator.isNavbarNavigation = false;
+                }, 100);
             }
         }, 600); // Delay to allow smooth scroll to complete
     }
@@ -443,32 +453,11 @@ document.addEventListener('click', (e) => {
 });
 
 // ===========================
-// Scroll Animations
+// Scroll Animations - REMOVED
 // ===========================
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -100px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-        }
-    });
-}, observerOptions);
-
-// Observe sections for scroll animations
-document.addEventListener('DOMContentLoaded', () => {
-    const sections = document.querySelectorAll('.section');
-    sections.forEach(section => {
-        section.style.opacity = '0';
-        section.style.transform = 'translateY(30px)';
-        section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(section);
-    });
-});
+// Previous implementation set sections to opacity: 0 and revealed them on scroll.
+// This caused blank screens on mobile and conflicted with terminal animations.
+// Sections are now always visible - terminal header animations are purely cosmetic.
 
 // ===========================
 // Glitch Effect on Hover
@@ -610,12 +599,15 @@ class TerminalCommandAnimator {
         this.currentlyAnimating = new Set(); // Track sections currently animating to prevent overlaps
         this.lastScrollY = window.scrollY; // Track last scroll position
         this.scrollDirection = 'down'; // Track scroll direction
+        this.isNavbarNavigation = false; // Flag to distinguish navbar navigation from scroll
 
-        // Monitor scroll direction
+        // Monitor scroll direction (only during manual scrolling)
         window.addEventListener('scroll', () => {
-            const currentScrollY = window.scrollY;
-            this.scrollDirection = currentScrollY > this.lastScrollY ? 'down' : 'up';
-            this.lastScrollY = currentScrollY;
+            if (!this.isNavbarNavigation) {
+                const currentScrollY = window.scrollY;
+                this.scrollDirection = currentScrollY > this.lastScrollY ? 'down' : 'up';
+                this.lastScrollY = currentScrollY;
+            }
         }, { passive: true });
     }
 
@@ -648,7 +640,7 @@ class TerminalCommandAnimator {
         // Execution delay (command processing)
         await this.delay(isMobileDevice ? 300 : 400);
 
-        // Reveal content
+        // Reveal content after animation completes
         contentElement.classList.add('revealed');
 
         // Remove from currently animating set
@@ -662,36 +654,25 @@ class TerminalCommandAnimator {
     observeSections() {
         const sections = document.querySelectorAll('.section:not(#home)');
 
-        // Create two observers with different trigger zones
-
-        // Observer for DOWNWARD scrolling (trigger when entering from bottom)
-        const downwardObserver = new IntersectionObserver((entries) => {
+        // Single observer for scroll-based animation triggering
+        const sectionObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting && this.scrollDirection === 'down') {
-                    this.handleSectionIntersection(entry.target);
+                if (entry.isIntersecting) {
+                    // Only trigger animation on downward scroll OR navbar navigation
+                    if (this.scrollDirection === 'down' || this.isNavbarNavigation) {
+                        this.handleSectionIntersection(entry.target);
+                    }
+                    // On upward scroll, do nothing - content is already visible
                 }
             });
         }, {
             threshold: 0.15,
-            rootMargin: '0px 0px -250px 0px' // Trigger when section is 250px into viewport from bottom
+            rootMargin: '0px 0px -200px 0px' // Trigger when section is 200px into viewport
         });
 
-        // Observer for UPWARD scrolling (trigger when entering from top)
-        const upwardObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && this.scrollDirection === 'up') {
-                    this.handleSectionIntersection(entry.target);
-                }
-            });
-        }, {
-            threshold: 0.1,
-            rootMargin: '-100px 0px 0px 0px' // Trigger when section header is 100px into viewport from top
-        });
-
-        // Observe all sections with both observers
+        // Observe all sections
         sections.forEach(section => {
-            downwardObserver.observe(section);
-            upwardObserver.observe(section);
+            sectionObserver.observe(section);
         });
     }
 
@@ -709,13 +690,13 @@ class TerminalCommandAnimator {
             // Mark this section as currently animating
             this.currentlyAnimating.add(sectionId);
 
-            // Reset for animation
+            // Reset for animation - hide content until animation completes
             commandElement.textContent = '';
             cursorElement.classList.remove('hidden');
             contentElement.classList.remove('revealed');
 
-            // Determine delay based on scroll direction
-            const delay = this.scrollDirection === 'down' ? 300 : 200;
+            // Determine delay based on trigger source
+            const delay = this.isNavbarNavigation ? 400 : 300;
 
             // Add a delay to ensure the header is fully visible before starting animation
             setTimeout(() => {
