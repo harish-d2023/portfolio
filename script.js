@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
         { text: '', type: '' },
         { text: 'kali login: kali', type: 'success' },
         { text: 'Password: ', type: '' },
-        { text: 'Last login: Thu Dec 19 20:46:33 2025', type: '' },
+        { text: 'Last login: Thu Mar 17 20:46:33 2026', type: '' },
         { text: '', type: '' },
         { text: 'Initializing security modules...', type: 'info' },
         { text: 'Loading user profile...', type: '' },
