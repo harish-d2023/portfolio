@@ -60,8 +60,11 @@
 
     <!-- Boot Screen -->
     <div id="boot-screen" class="boot-screen">
-        <div class="boot-container">
-            <div id="boot-text" class="boot-text"></div>
+        <img src="assets/kali-linux-1.svg" alt="Kali Logo" class="boot-logo">
+        <div id="boot-box" class="boot-box">
+            <div class="boot-container">
+                <div id="boot-text" class="boot-text"></div>
+            </div>
         </div>
     </div>
 
@@ -77,14 +80,15 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
-                <span class="terminal-prompt">root@harish:~$</span>
+                <a href="#home" class="terminal-prompt" style="text-decoration: none; transition: all 0.3s ease;">root@harish:~$</a>
             </div>
             <ul class="nav-menu">
-                <li><a href="#home" class="nav-link">[ HOME ]</a></li>
                 <li><a href="#about" class="nav-link">[ ABOUT ]</a></li>
                 <li><a href="#skills" class="nav-link">[ SKILLS ]</a></li>
                 <li><a href="#experience" class="nav-link">[ EXPERIENCE ]</a></li>
                 <li><a href="#projects" class="nav-link">[ PROJECTS ]</a></li>
+                <li><a href="#education" class="nav-link">[ EDUCATION ]</a></li>
+                <li><a href="#blog" class="nav-link">[ BLOG ]</a></li>
                 <li><a href="#contact" class="nav-link">[ CONTACT ]</a></li>
             </ul>
             <div class="hamburger">
@@ -553,6 +557,22 @@
                             <span>Cybersecurity Analyst Job Simulation – Forage (2025)</span>
                         </li>
                     </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section id="blog" class="section">
+        <div class="container">
+            <h2 class="section-header">
+                <span class="prompt">root@harish:~/blogs $</span>
+                <span class="terminal-command" data-command="ls -la"></span>
+                <span class="terminal-cursor">|</span>
+            </h2>
+            <div class="blog-content section-content">
+                <div class="coming-soon">
+                    Coming soon!
                 </div>
             </div>
         </div>

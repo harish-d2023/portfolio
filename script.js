@@ -12,6 +12,26 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initially hide main content
     body.classList.add('content-hidden');
 
+    let visualTimer;
+
+    // Auto-login sequence
+    let autoLoginTimer = setTimeout(() => {
+        // Provide visual feedback for auto-click (simulate hover/active state)
+        loginBtn.style.transition = 'all 0.1s ease';
+        loginBtn.style.background = '#357abd';
+        loginBtn.style.boxShadow = '0 4px 12px rgba(74, 144, 226, 0.3)';
+        loginBtn.style.transform = 'translateY(1px)';
+
+        // Remove simulated styles and execute click
+        visualTimer = setTimeout(() => {
+            loginBtn.style.background = '';
+            loginBtn.style.boxShadow = '';
+            loginBtn.style.transform = '';
+            loginBtn.style.transition = '';
+            loginBtn.click();
+        }, 200);
+    }, 2800); // Triggers visual state at 2.8s, clicks exactly at 3s
+
     // Kali Linux boot messages
     const bootMessages = [
         { text: '[    0.000000] Linux version 6.1.0-kali9-amd64 (devel@kali.org)', type: 'info' },
@@ -66,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
         { text: '', type: '' },
         { text: 'kali login: kali', type: 'success' },
         { text: 'Password: ', type: '' },
-        { text: 'Last login: Thu Mar 17 20:46:33 2026', type: '' },
+        { text: 'Last login: Thu Apr 12 20:46:33 2026', type: '' },
         { text: '', type: '' },
         { text: 'Initializing security modules...', type: 'info' },
         { text: 'Loading user profile...', type: '' },
@@ -76,44 +96,52 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Boot sequence function
     function startBootSequence() {
-        // Hide login screen
-        loginScreen.classList.add('fade-out');
+        // Instantly hide the login screen to show a pure black screen
+        loginScreen.style.transition = 'none';
+        loginScreen.style.opacity = '0';
+        loginScreen.style.visibility = 'hidden';
+        loginScreen.style.display = 'none';
 
+        // Show boot screen (initially solid black)
+        bootScreen.classList.add('active');
+
+        // Exactly 1-second blackout delay
         setTimeout(() => {
-            loginScreen.style.display = 'none';
+            // Reveal Kali Background and glassmorphism container
+            bootScreen.classList.add('show-bg');
 
-            // Show boot screen
-            bootScreen.classList.add('active');
+            // Small delay to let the UI rendering settle before typing
+            setTimeout(() => {
+                // Display boot messages sequentially
+                const bootTextContainer = document.getElementById('boot-text');
+                let messageIndex = 0;
 
-            // Display boot messages sequentially
-            const bootTextContainer = document.getElementById('boot-text');
-            let messageIndex = 0;
+                function displayNextMessage() {
+                    if (messageIndex < bootMessages.length) {
+                        const message = bootMessages[messageIndex];
+                        const line = document.createElement('div');
+                        line.className = `boot-line ${message.type}`;
+                        line.textContent = message.text;
+                        bootTextContainer.appendChild(line);
 
-            function displayNextMessage() {
-                if (messageIndex < bootMessages.length) {
-                    const message = bootMessages[messageIndex];
-                    const line = document.createElement('div');
-                    line.className = `boot-line ${message.type}`;
-                    line.textContent = message.text;
-                    bootTextContainer.appendChild(line);
+                        // Auto-scroll to bottom
+                        const bootContainer = bootTextContainer.parentElement;
+                        bootContainer.scrollTop = bootContainer.scrollHeight;
 
-                    // Auto-scroll to bottom
-                    const bootContainer = bootTextContainer.parentElement;
-                    bootContainer.scrollTop = bootContainer.scrollHeight;
+                        messageIndex++;
 
-                    messageIndex++;
-
-                    // Random delay between 30-80ms for realistic effect
-                    const delay = Math.random() * 50 + 30;
-                    setTimeout(displayNextMessage, delay);
-                } else {
-                    // Boot sequence complete, start access granted animation
-                    setTimeout(showAccessGranted, 500);
+                        // Slower delay for readability (200-350ms)
+                        const delay = Math.random() * 150 + 200;
+                        setTimeout(displayNextMessage, delay);
+                    } else {
+                        // Boot sequence complete, start access granted animation
+                        setTimeout(showAccessGranted, 500);
+                    }
                 }
-            }
 
-            displayNextMessage();
-        }, 800);
+                displayNextMessage();
+            }, 100);
+        }, 1000); // 1-second blackout
     }
 
     // Access Granted animation
@@ -171,6 +199,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Handle login button click
     function handleLogin() {
+        // Cancel the auto-login sequence if triggered manually
+        if (autoLoginTimer) clearTimeout(autoLoginTimer);
+        if (visualTimer) clearTimeout(visualTimer);
+
         startBootSequence();
     }
 
